@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>🌈 Mathe-Zauberwelt Deluxe</title>
+<style>
+:root{--pink:#ff6fb5;--blue:#4aa3ff;--green:#2ecc71;--yellow:#ffd84d;--purple:#9b5de5;--card:#ffffff}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Comic Sans MS','Trebuchet MS',system-ui,sans-serif;background:linear-gradient(180deg,#a0e9ff,#ffffff,#ffe0f7)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(90deg,var(--pink),var(--purple));color:#fff;padding:10px 14px;font-size:clamp(1rem,3.2vw,1.5rem)}
+.leftControls,.rightControls{display:flex;align-items:center;gap:8px}
+.smallBtn{background:#ffffff22;border:2px solid #fff;border-radius:14px;color:white;padding:6px 10px;font-size:.9rem;cursor:pointer}
+.smallBtn:hover{background:#ffffff44}
+.userBadge{display:flex;align-items:center;gap:8px}
+.avatar{width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden}
+.container{max-width:1000px;margin:0 auto;padding:12px}
+.card{background:var(--card);border-radius:22px;box-shadow:0 8px 20px rgba(0,0,0,.15);padding:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+button{border:none;padding:12px 16px;border-radius:20px;font-size:clamp(.9rem,2.6vw,1.05rem);font-weight:700;cursor:pointer}
+.op-btn{background:var(--purple);color:#fff}
+.level-btn{background:var(--blue);color:#fff}
+.big{font-size:clamp(2.1rem,8vw,3rem);margin:14px 0;color:var(--pink);text-align:center}
+.inputWrap{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+#answer{font-size:clamp(1.4rem,6vw,2rem);padding:10px;border-radius:14px;border:2px solid #e6eef8;width:min(180px,70vw);text-align:center}
+.feedback{font-size:clamp(1.1rem,3.8vw,1.4rem);font-weight:800;min-height:36px;text-align:center}
+.coin-display{display:flex;align-items:center;gap:10px;justify-content:center;font-size:clamp(1.1rem,3.5vw,1.4rem);margin-bottom:8px}
+.coin-icon{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff6a0,#ffd84d,#ffb703);color:#a86b00;font-weight:900;box-shadow:0 0 10px gold}
+.hint-toggle{background:#f0f9ff;border-radius:15px;padding:10px;margin-top:10px;cursor:pointer;font-weight:bold;text-align:center}
+.hint-content{display:none;background:#ffffff;padding:12px;border-radius:15px;margin-top:6px}
+.numberline{display:none;position:relative;height:90px;margin-top:12px;background:#eef7ff;border-radius:15px}
+.tick{position:absolute;bottom:30px;width:2px;height:20px;background:var(--blue)}
+.label{position:absolute;bottom:5px;transform:translateX(-50%);font-size:0.8rem}
+.marker{position:absolute;bottom:50px;width:20px;height:20px;border-radius:50%;background:var(--pink);transform:translateX(-50%)}
+.customBox{display:none;margin-top:10px;background:#fff7d6;padding:12px;border-radius:15px;text-align:center}
+.customBox input,.customBox select{font-size:1.2rem;padding:6px;border-radius:10px;margin:4px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:18px;padding:18px;max-width:420px;width:92%;text-align:center}
+.modal input{font-size:1.2rem;padding:10px;border-radius:12px;border:2px solid #e6eef8;width:100%}
+.avatars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.avatars button{background:#f6f6f6;border:2px solid #ddd;border-radius:12px;padding:8px}
+.avatars button.selected{border-color:var(--purple)}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:12px;margin-top:12px}
+.place{width:80px;border-radius:10px;background:#eee;padding:6px}
+.first{height:120px;background:gold}.second{height:90px;background:silver}.third{height:70px;background:#cd7f32}
+/* Popup mit Emoji & Sprechblase */
+.popup{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:50}
+.popupCard{background:#fff;border-radius:18px;padding:18px;max-width:460px;width:94%;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.animalLarge{font-size:5rem;line-height:1}
+.speech{position:relative;background:#fff;border:3px solid #333;border-radius:16px;padding:12px 14px;margin:10px auto 0;max-width:340px;font-size:1.3rem;font-weight:800}
+.speech:after{content:"";position:absolute;left:40px;top:-14px;border-width:0 12px 14px 12px;border-style:solid;border-color:transparent transparent #333 transparent}
+.speech:before{content:"";position:absolute;left:42px;top:-10px;border-width:0 10px 12px 10px;border-style:solid;border-color:transparent transparent #fff transparent}
+</style>
+</head>
+<body>
+<header>
+  <div class="leftControls">
+    <button class="smallBtn" id="modeAuto">🎲 Zufall</button>
+    <button class="smallBtn" id="modeCustom">✏️ Eigene</button>
+  </div>
+  <div>🌟 Mathe‑Zauberwelt 🌟</div>
+  <div class="rightControls">
+    <div class="userBadge"><div class="avatar" id="avatarView"></div><span id="userName">–</span></div>
+    <button class="smallBtn" id="switchUser">👤 Benutzer</button>
+    <button class="smallBtn" id="showHigh">🏆 Highscore</button>
+  </div>
+</header>
+
+<!-- Benutzer wechseln + Avatar -->
+<div class="overlay" id="nameOverlay">
+  <div class="modal">
+    <h2>👋 Benutzer</h2>
+    <input id="playerNameInput" placeholder="Name eingeben" />
+    <div class="avatars" id="avatarGrid"></div>
+    <div style="margin-top:10px"><button id="startBtn">Speichern</button></div>
+  </div>
+</div>
+
+<!-- Highscore -->
+<div class="overlay" id="highOverlay" style="display:none">
+  <div class="modal">
+    <h2>🏆 Beste Mathe‑Helden</h2>
+    <div class="podium" id="podium"></div>
+    <button onclick="highOverlay.style.display='none'">Schließen</button>
+  </div>
+</div>
+
+<div class="container"><div class="card">
+<div class="row"><button class="op-btn" data-op="+">➕ Plus</button><button class="op-btn" data-op="-">➖ Minus</button></div>
+<div class="row" style="margin-top:6px"><button class="level-btn" data-level="easy">🟢 Leicht</button><button class="level-btn" data-level="medium">🟡 Mittel</button><button class="level-btn" data-level="hard">🔴 Schwer</button></div>
+<div class="customBox" id="customBox"><input id="custA" type="number" placeholder="Zahl 1"><select id="custOp"><option>+</option><option>-</option></select><input id="custB" type="number" placeholder="Zahl 2"><button onclick="startCustomTask()">Start</button></div>
+<div class="big" id="task">–</div>
+<div id="inputArea" class="inputWrap"></div>
+<div class="coin-display"><span class="coin-icon">★</span><span id="coins">0</span>&nbsp;Zaubermünzen</div>
+<div class="hint-toggle" onclick="toggleHint()">💡 Tipp anzeigen / verstecken</div>
+<div class="hint-content" id="hintContent"></div>
+<div class="numberline" id="numberline"></div>
+<div class="feedback" id="feedback"></div>
+</div></div>
+
+<!-- Popup -->
+<div class="popup" id="popup">
+  <div class="popupCard">
+    <div class="animalLarge" id="popAnimal"></div>
+    <div class="speech" id="popMsg">Super!</div>
+    <button onclick="closePopup()">Weiter</button>
+  </div>
+</div>
+
+<script>
+const EMOJIS=['🐱','🐶','🐰','🐼','🦊','🐻'];
+const avatarGrid=document.getElementById('avatarGrid');
+let selectedAvatar=0;
+EMOJIS.forEach((emo,i)=>{const b=document.createElement('button');b.textContent=emo;b.onclick=()=>{selectedAvatar=i;[...avatarGrid.children].forEach(c=>c.classList.remove('selected'));b.classList.add('selected');}; if(i===0)b.classList.add('selected'); avatarGrid.appendChild(b);});
+
+let players=JSON.parse(localStorage.getItem('mz_players')||'{}');
+let currentUser=localStorage.getItem('mz_currentUser')||'';
+let op='+',level='easy',a=0,b=0,solution=0,coins=0,customMode=false;
+const ranges={easy:[0,20],medium:[21,50],hard:[51,100]};
+const $=id=>document.getElementById(id);
+const rand=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+
+function savePlayer(){players[currentUser]={score:coins,avatar:selectedAvatar};localStorage.setItem('mz_players',JSON.stringify(players));localStorage.setItem('mz_currentUser',currentUser);}
+function loadPlayer(name){currentUser=name;const p=players[name]||{score:0,avatar:0};coins=p.score||0;selectedAvatar=p.avatar||0;$('userName').textContent=name;$('avatarView').textContent=EMOJIS[selectedAvatar];updateUI();}
+
+$('startBtn').onclick=()=>{const name=$('playerNameInput').value.trim()||'Spieler'; if(currentUser) savePlayer(); loadPlayer(name); savePlayer(); $('nameOverlay').style.display='none'; generate();};
+$('switchUser').onclick=()=>{$('nameOverlay').style.display='flex'};
+
+$('showHigh').onclick=()=>{let arr=Object.entries(players).map(([n,v])=>[n,v.score||0]).sort((a,b)=>b[1]-a[1]).slice(0,3); podium.innerHTML=''; const classes=['first','second','third']; arr.forEach((p,i)=>{let d=document.createElement('div');d.className='place '+classes[i];d.innerHTML=`<b>${p[0]}</b><br>${p[1]}🪙`;podium.appendChild(d);}); highOverlay.style.display='flex';};
+
+function updateUI(){coins=Math.max(0,coins);$('coins').textContent=coins;savePlayer();}
+function createInput(){$('inputArea').innerHTML=`<input id=\"answer\" type=\"number\" inputmode=\"numeric\"><button onclick=\"checkAnswer()\">✨ Prüfen</button>`;$('answer').focus();}
+
+function generate(){if(customMode)return;const[min,max]=ranges[level];if(op==='+'){solution=rand(min,max);a=rand(0,solution);b=solution-a;}else{solution=rand(min,max);a=rand(solution,max);b=a-solution;}$('task').textContent=`${a} ${op} ${b} = ?`;updateHint();drawNumberLine();createInput();}
+function startCustomTask(){customMode=true;a=Number(custA.value);b=Number(custB.value);op=custOp.value;solution=op==='+'?a+b:a-b;$('task').textContent=`${a} ${op} ${b} = ?`;updateHint();drawNumberLine();createInput();}
+
+$('modeAuto').onclick=()=>{customMode=false;customBox.style.display='none';generate();};
+$('modeCustom').onclick=()=>{customBox.style.display='block';};
+
+document.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>{op=b.dataset.op;generate()});
+document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{level=b.dataset.level;generate()});
+
+function updateHint(){$('hintContent').innerHTML=`Starte bei ${a} und rechne ${b} ${op==='+'?'vorwärts':'rückwärts'}.`;}
+function toggleHint(){const vis=$('hintContent').style.display==='block';$('hintContent').style.display=vis?'none':'block';$('numberline').style.display=vis?'none':'block';}
+
+function drawNumberLine(){const line=$('numberline');line.innerHTML='';const minVal=Math.min(a,solution);const maxVal=Math.max(a,solution);let pad=Math.max(2,Math.ceil((maxVal-minVal)/4));let startVal=Math.max(0,minVal-pad);let endVal=maxVal+pad;let range=endVal-startVal;let step=Math.max(1,Math.ceil(range/10));for(let i=startVal;i<=endVal;i+=step){let pos=(i-startVal)/range*100;let t=document.createElement('div');t.className='tick';t.style.left=pos+'%';line.appendChild(t);let l=document.createElement('div');l.className='label';l.style.left=pos+'%';l.textContent=i;line.appendChild(l);}let start=document.createElement('div');start.className='marker';start.style.left=((a-startVal)/range*100)+'%';line.appendChild(start);} 
+
+function playJingle(){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const o1=ctx.createOscillator();const o2=ctx.createOscillator();const g=ctx.createGain();o1.connect(g);o2.connect(g);g.connect(ctx.destination);o1.type='triangle';o2.type='square';o1.frequency.setValueAtTime(523,ctx.currentTime);o2.frequency.setValueAtTime(659,ctx.currentTime);o1.frequency.exponentialRampToValueAtTime(880,ctx.currentTime+0.4);o2.frequency.exponentialRampToValueAtTime(988,ctx.currentTime+0.4);g.gain.setValueAtTime(0.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.7,ctx.currentTime+0.05);g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+1.3);o1.start();o2.start();o1.stop(ctx.currentTime+1.35);o2.stop(ctx.currentTime+1.35);}catch(e){}}
+function animalSound(idx){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const g=ctx.createGain();g.connect(ctx.destination);g.gain.value=0.6;const make=(f,t)=>{const o=ctx.createOscillator();o.type='square';o.frequency.value=f;o.connect(g);o.start();o.stop(ctx.currentTime+t)};if(idx===0){make(800,0.15);setTimeout(()=>make(600,0.15),160);}else if(idx===1){make(500,0.2);setTimeout(()=>make(300,0.2),220);}else if(idx===2){make(900,0.12);setTimeout(()=>make(1000,0.12),140);}else if(idx===3){make(400,0.25);}else if(idx===4){make(700,0.18);setTimeout(()=>make(900,0.18),200);}else{make(350,0.25);} }catch(e){}}
+function speakPraise(name){try{const u=new SpeechSynthesisUtterance(`Super, ${name}! Das war toll!`);u.lang='de-DE';u.rate=0.95;u.pitch=1.1;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+
+function celebrate(){const pop=$('popup');$('popAnimal').textContent=EMOJIS[selectedAvatar];$('popMsg').textContent=`${currentUser}, du bist toll!`;playJingle();animalSound(selectedAvatar);speakPraise(currentUser);pop.style.display='flex';}
+function closePopup(){$('popup').style.display='none';generate();}
+
+function checkAnswer(){const val=Number(document.getElementById('answer').value);$('inputArea').innerHTML='';let triggered=false;
+if(val===solution){$('feedback').textContent=`Super gemacht, ${currentUser}!`;$('feedback').style.color='green';if(!customMode){coins++; if(coins%5===0){ celebrate(); triggered=true; }}}
+else{$('feedback').textContent=`Nochmal versuchen, ${currentUser}!`;$('feedback').style.color='crimson';if(!customMode){coins=Math.max(0,coins-1);}}
+updateUI(); if(!triggered){ setTimeout(generate,2000);} }
+
+document.addEventListener('DOMContentLoaded',()=>{if(currentUser&&players[currentUser]){loadPlayer(currentUser);$('nameOverlay').style.display='none';generate();}else{$('nameOverlay').style.display='flex';}});
+</script>
+</body>
+</html>
